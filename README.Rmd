@@ -9,3 +9,305 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+# Code to Create this Document
+```{r,echo=TRUE,eval=FALSE}
+rmarkdown::render("~/NCSU/ST558/Repos/ST558-Project1/README.Rmd", 
+              output_format = "github_document", 
+              output_dir = "~/NCSU/ST558/Repos/ST558-Project1",
+              output_options = list(
+                html_preview = FALSE
+                )
+              )
+
+```
+
+## Create vignette for reading and summarizing data from the API
+
+NASA key: eR97TrIVKwTWcIIdWJKGyVFCSHjlZtuluykfI93U
+Example to use the key: https://api.nasa.gov/planetary/apod?api_key=eR97TrIVKwTWcIIdWJKGyVFCSHjlZtuluykfI93U
+
+# Required packages needed to run the code to create vignette
+
+```{r}
+library(httr)
+library(jsonlite)
+library(tidyverse)
+library(RCurl)
+```
+
+Note: Maybe add death/total case ratio
+
+```{r, confirmed}
+confirmed <- function(country = "all"){
+  ###
+  # This function returns total covid case count, new covid case count,
+  # and total death count for the country of interest.
+  #
+  ###
+  
+  # Obtain data from summary endpoint
+  o <- fromJSON(
+    "https://api.covid19api.com/summary"
+    )
+  
+  output <- o$Countries
+  
+  if (country != "all"){
+    
+  # Filter rows based on selected Country. Select TotalConfirmed,
+  # NewConfirmed, TotalDeaths
+   if (country %in% output$Country){
+    sub <- output %>%
+       filter(Country == country) %>%
+       select(TotalConfirmed,NewConfirmed)
+   }
+  
+  # Filter rows based on selected Country. Select TotalConfirmed,
+  # NewConfirmed, TotalDeaths
+  else if (country %in% output$CountryCode){
+    sub <- output %>%
+      filter(CountryCode == country) %>%
+      select(TotalConfirmed,NewConfirmed)
+  }
+  
+  # Filter rows based on selected Country. Select TotalConfirmed,
+  # NewConfirmed, TotalDeaths
+  else if (country %in% output$Slug){
+    sub <- output %>%
+      filter(Slug == country) %>%
+      select(TotalConfirmed,NewConfirmed)
+  }
+  
+  # Filter rows based on selected Country. Select TotalConfirmed,
+  # NewConfirmed, TotalDeaths
+  else {
+    message <- paste("ERROR: Country was not found in Country,
+                     CountryCode, or Slug columns. Check spelling.")
+    stop(message)
+  }
+}
+    # Return all confirmed cases from all countries
+    else { 
+      sub <- output %>%
+       select(Country,TotalConfirmed,NewConfirmed)
+    }
+return(sub)
+}
+confirmed(country = "all")
+```
+
+```{r, deaths}
+deaths <- function(country = "all"){
+  ###
+  # This function returns total covid case count, new covid case count,
+  # and total death count for the country of interest.
+  #
+  ###
+  
+  # Obtain data from summary endpoint
+  o <- fromJSON(
+    "https://api.covid19api.com/summary"
+    )
+  
+  output <- o$Countries
+  
+  if (country != "all"){
+    
+  # Filter rows based on selected Country. Select TotalConfirmed,
+  # NewConfirmed, TotalDeaths
+   if (country %in% output$Country){
+    sub <- output %>%
+       filter(Country == country) %>%
+       select(TotalDeaths,NewDeaths)
+   }
+  
+  # Filter rows based on selected Country. Select TotalConfirmed,
+  # NewConfirmed, TotalDeaths
+  else if (country %in% output$CountryCode){
+    sub <- output %>%
+      filter(CountryCode == country) %>%
+      select(TotalDeaths,NewDeaths)
+  }
+  
+  # Filter rows based on selected Country. Select TotalConfirmed,
+  # NewConfirmed, TotalDeaths
+  else if (country %in% output$Slug){
+    sub <- output %>%
+      filter(Slug == country) %>%
+      select(TotalDeaths,NewDeaths)
+  }
+  
+  # Filter rows based on selected Country. Select TotalConfirmed,
+  # NewConfirmed, TotalDeaths
+  else {
+    message <- paste("ERROR: Country was not found in Country,
+                     CountryCode, or Slug columns. Check spelling.")
+    stop(message)
+  }
+  }
+  # Return all deaths from all countries
+  else { 
+       sub <- output %>%
+       select(Country,TotalDeaths,NewDeaths)
+    }
+return(sub)
+}
+
+deaths(country = "all")
+```
+Will likely not use because recovered data is zero for everything 
+```{r, recovered}
+
+o <- fromJSON(
+    "https://api.covid19api.com/summary"
+    )
+o
+
+recovered <- function(country = "all"){
+  ###
+  # This function returns total covid case count, new covid case count,
+  # and total death count for the country of interest.
+  #
+  ###
+  
+  # Obtain data from summary endpoint
+  o <- fromJSON(
+    "https://api.covid19api.com/summary"
+    )
+  
+  output <- o$Countries
+  
+  if (country != "all"){
+    
+  # Filter rows based on selected Country. Select TotalConfirmed,
+  # NewConfirmed, TotalDeaths
+   if (country %in% output$Country){
+    sub <- output %>%
+       filter(Country == country) %>%
+       select(TotalRecovered,NewRecovered)
+   }
+  
+  # Filter rows based on selected Country. Select TotalConfirmed,
+  # NewConfirmed, TotalDeaths
+  else if (country %in% output$CountryCode){
+    sub <- output %>%
+      filter(CountryCode == country) %>%
+      select(TotalRecovered,NewRecovered)
+  }
+  
+  # Filter rows based on selected Country. Select TotalConfirmed,
+  # NewConfirmed, TotalDeaths
+  else if (country %in% output$Slug){
+    sub <- output %>%
+      filter(Slug == country) %>%
+      select(TotalRecovered,NewRecovered)
+  }
+  
+  # Filter rows based on selected Country. Select TotalConfirmed,
+  # NewConfirmed, TotalDeaths
+  else {
+    message <- paste("ERROR: Country was not found in Country,
+                     CountryCode, or Slug columns. Check spelling.")
+    stop(message)
+  }
+  }
+  else { 
+       sub <- output %>%
+       select(Country,TotalRecovered,NewRecovered)
+    }
+return(sub)
+}
+
+recovered(country = "all")
+```
+
+Returns all cases by case type for a country from the first recorded case. 
+
+```{r, daily}
+daily <- function(country) {
+  baseURL <- "https://api.covid19api.com/dayone/country/"
+  value <- "united-states"
+  last <- "?province=+"
+  URL <- paste0(baseURL, value, last)
+  out <- RCurl::getURL(URL)
+  o <- fromJSON(URL)
+  
+  sub <- o %>%
+       select(Country, Province, Confirmed, 
+              Deaths, Recovered, Active, Date)
+  
+  return(sub)
+}
+
+daily("united-states")
+```
+
+Returns all live cases (10 minute increments) for the country and province of interest
+
+```{r, live}
+live <- function(country) {
+  baseURL <- "https://api.covid19api.com/live/country/"
+  value <- country
+  region <- "?province=+"
+  last <- "/status/confirmed"
+  URL <- paste0(baseURL, value, region, last)
+  out <- RCurl::getURL(URL)
+  o <- fromJSON(out)
+  
+  sub <- o %>%
+       select(Country, Province, Confirmed, 
+              Date)
+  
+  return(sub)
+}
+
+live("united-states")
+```
+
+
+Total confirmed and total death percentages calculated from the summaries and world endpoints. Here we can directly see what percent of global cases and death are attributed to each country. 
+
+```{r, worldPercent}
+worldPercent <- function(country) {
+  URL <- "https://api.covid19api.com/world/total"
+  out <- RCurl::getURL(URL)
+  o <- fromJSON(URL)
+  
+  death <- round((deaths(country)[1] / o[["TotalDeaths"]]) * 100, 2)
+  confirm <- round((confirmed(country)[1] / o[["TotalConfirmed"]]) * 100,2)
+  df <- data.frame(deaths(country)[1], o[["TotalDeaths"]], 
+                   death, confirmed(country)[1],
+                   o[["TotalConfirmed"]], confirm)
+  colnames(df) <- c("Death Count", "Global Death Count", 
+                    "% of Global Death", "Case count", 
+                    "Global Case Count", "% of Global Case Count")
+  return(df)
+}
+
+worldPercent("united-states")
+```
+
+
+# create contingency tables
+# create numerical summaries for some quantitative variables at each setting of categorical.
+# craete at least 5 plots - 1 bar, 1 histogram, 1 box, 1 scatter
+
+Contingency Tables - Compare data for top 3 Countries based on confirmed Cases
+
+```{r}
+# Determine top 3 countries with highest total confirmed case count
+totalConfirmed <- confirmed("all")[c(1,2)]
+totalConfirmedOrdered <- totalConfirmed %>% arrange(TotalConfirmed)
+totalConfirmedOrdered[190:192,]
+
+#confirmed cases from top 3 countries
+confirmed("united-states")
+confirmed("india")
+confirmed("brazil")
+
+#deaths from top 3 countries
+deaths("united-states")
+deaths("india")
+deaths("brazil")
+```
+
