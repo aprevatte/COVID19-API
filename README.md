@@ -3,20 +3,29 @@ README
 Alex Prevatte
 10/2/2021
 
-## Create vignette for reading and summarizing data from the API
+This vignette was created for reading and summarizing data from the
+[COVID-19
+API](https://documenter.getpostman.com/view/10808728/SzS8rjbc#704f6cc8-780a-4819-8c66-5e03750cb406)
 
 # Requirements
 
-packages needed to run the code to create vignette
+To interact with the API and perform exploratory data analysis I used
+the following packages:
 
-``` r
-library(httr)
-library(jsonlite)
-library(tidyverse)
-library(RCurl)
-```
+-   [`knitr`](https://cran.r-project.org/web/packages/knitr/index.html):
+    Report generation
+-   [`jsonlite`](https://cran.r-project.org/web/packages/jsonlite/):
+    JSON parser for R
+-   [`tidyverse`](https://www.tidyverse.org/): Data cleaning, filtering,
+    graphing
+-   [`RCurl`](https://cran.r-project.org/web/packages/RCurl/RCurl.pdf):
+    Access API
 
-The confirmed function is used to return total and new confirmed
+# API Connection Functions
+
+## `confirmed`
+
+The `confirmed` function is used to return total and new confirmed
 COVID-19 case counts for a country of interest. To return the total case
 count for all countries, “all” can be used. These total counts are
 updated daily.
@@ -79,9 +88,11 @@ confirmed <- function(country = "all"){
 }
 ```
 
-The deaths function is used to return total and new COVID-19 deaths for
-a country of interest. To return the total case count for all countries,
-“all” can be used. These total counts are updated daily.
+## `deaths`
+
+The `deaths` function is used to return total and new COVID-19 deaths
+for a country of interest. To return the total case count for all
+countries, `"all"` can be used. These total counts are updated daily.
 
 ``` r
 deaths <- function(country = "all"){
@@ -141,7 +152,9 @@ deaths <- function(country = "all"){
 }
 ```
 
-The daily function is used to return all cases by case type for a
+## `daily`
+
+The `daily` function is used to return all cases by case type for a
 country from the first recorded case. These total counts are updated
 daily.
 
@@ -170,9 +183,11 @@ daily <- function(country) {
 }
 ```
 
-The live function is used to return all live confirmed cases (10 minute
-increments) for the country of interest. These live counts are updated
-every 10 minutes.
+## `live`
+
+The `live` function is used to return all live confirmed cases (10
+minute increments) for the country of interest. These live counts are
+updated every 10 minutes.
 
 ``` r
 live <- function(country) {
@@ -198,7 +213,9 @@ live <- function(country) {
 }
 ```
 
-The dateFilter function is used to return cumulative daily confirmed
+## `dateFilter`
+
+The `dateFilter` function is used to return cumulative daily confirmed
 cases for a given range of dates for the country of interest.
 
 ``` r
@@ -229,10 +246,12 @@ dateFilter <- function(country, covidStart, covidEnd) {
 }
 ```
 
-The worldPercent function uses the world and summary endpoints to return
-total confirmed cases, total deaths, and percent of confirmed cases and
-deaths from global cases. Here we can directly see what percent of
-global cases and deaths are attributed to a given country.
+## `worldPercent`
+
+The `worldPercent` function uses the world and summary endpoints to
+return total confirmed cases, total deaths, and percent of confirmed
+cases and deaths from global cases. Here we can directly see what
+percent of global cases and deaths are attributed to a given country.
 
 ``` r
 worldPercent <- function(country) {
