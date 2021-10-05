@@ -59,7 +59,7 @@ confirmed <- function(country = "all"){
    if (country %in% output$Country){
     sub <- output %>%
        filter(Country == country) %>%
-       select(TotalConfirmed,NewConfirmed)
+       select(Country,TotalConfirmed,NewConfirmed)
    }
   
   # Filter rows based on selected Country. Select TotalConfirmed,
@@ -67,7 +67,7 @@ confirmed <- function(country = "all"){
   else if (country %in% output$CountryCode){
     sub <- output %>%
       filter(CountryCode == country) %>%
-      select(TotalConfirmed,NewConfirmed)
+      select(Country,TotalConfirmed,NewConfirmed)
   }
   
   # Filter rows based on selected Country. Select TotalConfirmed,
@@ -75,7 +75,7 @@ confirmed <- function(country = "all"){
   else if (country %in% output$Slug){
     sub <- output %>%
       filter(Slug == country) %>%
-      select(TotalConfirmed,NewConfirmed)
+      select(Country,TotalConfirmed,NewConfirmed)
   }
   
   # Filter rows based on selected Country. Select TotalConfirmed,
@@ -118,7 +118,7 @@ deaths <- function(country = "all"){
    if (country %in% output$Country){
     sub <- output %>%
        filter(Country == country) %>%
-       select(TotalDeaths,NewDeaths)
+       select(Country,TotalDeaths,NewDeaths)
    }
   
   # Filter rows based on selected Country. Select TotalConfirmed,
@@ -126,7 +126,7 @@ deaths <- function(country = "all"){
   else if (country %in% output$CountryCode){
     sub <- output %>%
       filter(CountryCode == country) %>%
-      select(TotalDeaths,NewDeaths)
+      select(Country,TotalDeaths,NewDeaths)
   }
   
   # Filter rows based on selected Country. Select TotalConfirmed,
@@ -134,7 +134,7 @@ deaths <- function(country = "all"){
   else if (country %in% output$Slug){
     sub <- output %>%
       filter(Slug == country) %>%
-      select(TotalDeaths,NewDeaths)
+      select(Country,TotalDeaths,NewDeaths)
   }
   
   # Filter rows based on selected Country. Select TotalConfirmed,
@@ -157,12 +157,6 @@ deaths(country = "all")
 ```
 Will likely not use because recovered data is zero for everything 
 ```{r, recovered}
-
-o <- fromJSON(
-    "https://api.covid19api.com/summary"
-    )
-o
-
 recovered <- function(country = "all"){
   ###
   # This function returns total covid case count, new covid case count,
@@ -184,7 +178,7 @@ recovered <- function(country = "all"){
    if (country %in% output$Country){
     sub <- output %>%
        filter(Country == country) %>%
-       select(TotalRecovered,NewRecovered)
+       select(Country,TotalRecovered,NewRecovered)
    }
   
   # Filter rows based on selected Country. Select TotalConfirmed,
@@ -192,7 +186,7 @@ recovered <- function(country = "all"){
   else if (country %in% output$CountryCode){
     sub <- output %>%
       filter(CountryCode == country) %>%
-      select(TotalRecovered,NewRecovered)
+      select(Country,TotalRecovered,NewRecovered)
   }
   
   # Filter rows based on selected Country. Select TotalConfirmed,
@@ -200,7 +194,7 @@ recovered <- function(country = "all"){
   else if (country %in% output$Slug){
     sub <- output %>%
       filter(Slug == country) %>%
-      select(TotalRecovered,NewRecovered)
+      select(Country,TotalRecovered,NewRecovered)
   }
   
   # Filter rows based on selected Country. Select TotalConfirmed,
@@ -226,7 +220,7 @@ Returns all cases by case type for a country from the first recorded case.
 ```{r, daily}
 daily <- function(country) {
   baseURL <- "https://api.covid19api.com/dayone/country/"
-  value <- "united-states"
+  value <- country
   last <- "?province=+"
   URL <- paste0(baseURL, value, last)
   out <- RCurl::getURL(URL)
@@ -239,7 +233,7 @@ daily <- function(country) {
   return(sub)
 }
 
-daily("united-states")
+daily("india")
 ```
 
 Returns all live cases (10 minute increments) for the country and province of interest
@@ -261,7 +255,7 @@ live <- function(country) {
   return(sub)
 }
 
-live("united-states")
+live("brazil")
 ```
 
 
@@ -294,20 +288,167 @@ worldPercent("united-states")
 
 Contingency Tables - Compare data for top 3 Countries based on confirmed Cases
 
-```{r}
+```{r, contingency}
 # Determine top 3 countries with highest total confirmed case count
 totalConfirmed <- confirmed("all")[c(1,2)]
 totalConfirmedOrdered <- totalConfirmed %>% arrange(TotalConfirmed)
 totalConfirmedOrdered[190:192,]
 
-#confirmed cases from top 3 countries
-confirmed("united-states")
-confirmed("india")
-confirmed("brazil")
+#total confirmed cases from top 3 countries
+usTotalConfirmed <- confirmed("united-states")[c(1,2)]
+indiaTotalConfirmed <- confirmed("india")[c(1,2)]
+brazilTotalConfirmed <- confirmed("brazil")[c(1,2)]
+confirmedDF <- rbind(usTotalConfirmed, indiaTotalConfirmed, brazilTotalConfirmed)
 
-#deaths from top 3 countries
-deaths("united-states")
-deaths("india")
-deaths("brazil")
+#total deaths from top 3 countries
+usTotalDeaths <- deaths("united-states")[2]
+indiaTotalDeaths <- deaths("india")[2]
+brazilTotalDeaths <- deaths("brazil")[2]
+deathDF <- rbind(usTotalDeaths, indiaTotalDeaths, brazilTotalDeaths)
+
+#combine confirmed and death dataframes and create table
+combinedDF <- cbind(confirmedDF,deathDF)
+colnames(combinedDF) <- c("Country", "Total Confirmed Cases", "Total Deaths")
+knitr::kable(combinedDF)
+
+#new confirmed cases from top 3 countries
+usNewConfirmed <- confirmed("united-states")[c(1,3)]
+indiaNewConfirmed <- confirmed("india")[c(1,3)]
+brazilNewConfirmed <- confirmed("brazil")[c(1,3)]
+confirmedNewDF <- rbind(usNewConfirmed, indiaNewConfirmed, brazilNewConfirmed)
+
+#new deaths from top 3 countries
+usNewConfirmed <- deaths("united-states")[3]
+indiaNewConfirmed <- deaths("india")[3]
+brazilNewConfirmed <- deaths("brazil")[3]
+deathNewDF <- rbind(usNewConfirmed, indiaNewConfirmed, brazilNewConfirmed)
+
+#combine confirmed and death dataframes and create table
+combinedNewDF <- cbind(confirmedNewDF,deathNewDF)
+colnames(combinedNewDF) <- c("Country", "New Daily Confirmed Cases", "New Daily Deaths")
+knitr::kable(combinedNewDF)
+```
+
+Create numerical summaries for quant variables at each setting of categorical variable:
+
+The daily function contains confirmed cases and death values that are cumulative sums for each subsequent day. To create quantitative summaries of this data, I decided to create two new variables that display the daily confirmed case and death count without summing these variables over time. This way, we can determine summary statistics for daily confirmed and death values. 
+
+Notes: Numerical summaries of new confirmed and new death cases in United States 
+```{r, numerical summaries}
+#Create two new variables for United States
+usDF <- daily("united-states")
+n <- nrow(usDF)
+newDailyConfirmed <- vector(n, mode = "numeric")
+newDailyDeaths <- vector(n, mode = "numeric")
+for (i in 1:n) {
+  newDailyConfirmed[i] <- usDF$Confirmed[i+1] - usDF$Confirmed[i]
+  newDailyDeaths[i] <- usDF$Deaths[i+1] - usDF$Deaths[i]
+}
+
+#Get summary statistics for new daily cases and deaths for the U.S
+newDailyConfirmed <- data.frame(newDailyConfirmed)
+newDailyConfirmed <- newDailyConfirmed %>%
+summarize("Min." = min(newDailyConfirmed, na.rm = TRUE),
+          "1st Quartile" = quantile(newDailyConfirmed, 0.25, na.rm = TRUE),
+          "Median" = quantile(newDailyConfirmed, 0.5, na.rm = TRUE),
+          "Mean" = mean(newDailyConfirmed, na.rm = TRUE),
+          "3rd Quartile" = quantile(newDailyConfirmed, 0.75, na.rm = TRUE),
+          "Max" = max(newDailyConfirmed, na.rm = TRUE),
+          "Std. Dev." = sd(newDailyConfirmed, na.rm = TRUE)
+          )
+# assign category
+newDailyConfirmed$Category <- "Daily Confirmed Cases"
+
+newDailyDeaths <- data.frame(newDailyDeaths)
+newDailyDeaths <- newDailyDeaths %>%
+summarize("Min." = min(newDailyDeaths, na.rm = TRUE),
+          "1st Quartile" = quantile(newDailyDeaths, 0.25, na.rm = TRUE),
+          "Median" = quantile(newDailyDeaths, 0.5, na.rm = TRUE),
+          "Mean" = mean(newDailyDeaths, na.rm = TRUE),
+          "3rd Quartile" = quantile(newDailyDeaths, 0.75, na.rm = TRUE),
+          "Max" = max(newDailyDeaths, na.rm = TRUE),
+          "Std. Dev." = sd(newDailyDeaths, na.rm = TRUE)
+          )
+#assign category
+newDailyDeaths$Category <- "Daily Death"
+
+#Table of summary statistics
+combinedStats <- rbind(newDailyConfirmed,newDailyDeaths)
+combinedStats <- combinedStats %>% select(Category, Min., `1st Quartile`, Median,
+                                          Mean, `3rd Quartile`, Max, `Std. Dev.`)
+  
+knitr::kable(combinedStats, 
+             caption="Summary Statistics for Daily Confirmed Cases and Deaths in the United States",
+             digits=0)
+```
+
+Boxplot of top three countries daily confirmed case count 
+
+```{r, boxplot}
+#Create daily confirmed variables for United States 
+usDFCount <- daily("united-states")
+n <- nrow(usDFCount)
+usDailyConfirmed <- vector(n, mode = "numeric")
+for (i in 1:n) {
+  usDailyConfirmed[i] <- usDFCount$Confirmed[i+1] - usDFCount$Confirmed[i]
+}
+
+# assign category, column name, and convert to dataframe
+usDailyConfirmed <- data.frame(usDailyConfirmed)
+usDailyConfirmed$Country <- "United States"
+colnames(usDailyConfirmed) <- c("Count", "Country")
+
+
+#Create daily confirmed variables for India 
+indiaDF <- daily("india")
+n <- nrow(indiaDF)
+n
+indiaDailyConfirmed <- vector(n, mode = "numeric")
+for (i in 1:n) {
+  indiaDailyConfirmed[i] <- indiaDF$Confirmed[i+1] - indiaDF$Confirmed[i]
+}
+
+
+# assign category, column name, and convert to dataframe
+indiaDailyConfirmed <- data.frame(indiaDailyConfirmed)
+indiaDailyConfirmed$Country <- "India"
+colnames(indiaDailyConfirmed) <- c("Count", "Country")
+
+
+#Create daily confirmed variables for Brazil 
+brazilDF <- daily("brazil")
+n <- nrow(brazilDF)
+brazilDailyConfirmed <- vector(n, mode = "numeric")
+for (i in 1:n) {
+  brazilDailyConfirmed[i] <- brazilDF$Confirmed[i+1] - brazilDF$Confirmed[i]
+}
+
+# assign category and convert to dataframe
+brazilDailyConfirmed <- data.frame(brazilDailyConfirmed)
+brazilDailyConfirmed$Country <- "Brazil"
+colnames(brazilDailyConfirmed) <- c("Count", "Country")
+
+
+combinedAll <- rbind(usDailyConfirmed,indiaDailyConfirmed,brazilDailyConfirmed)
+combinedAll <- combinedAll %>% filter(!is.na(Count))
+
+# Make a box plot of franchise win percentage by game type.
+g <- ggplot(combinedAll, 
+               aes(x = Country,
+                   y = Count,
+                   color = Country
+        ))
+  # Add the box plot layer.
+  g + geom_boxplot() +
+  # Add labels to the axes.
+  scale_x_discrete("Daily Case Count") + 
+  # Add a title.
+  ggtitle("Daily Case Count for Top 3 Countries") + 
+  # Remove the legend 
+  theme(legend.position="none")
+```
+
+```{r, barplot}
+
 ```
 
