@@ -2,7 +2,6 @@
 title: "README"
 author: "Alex Prevatte"
 date: "10/2/2021"
-output: html_document
 ---
 
 ```{r setup, include=FALSE}
@@ -18,13 +17,13 @@ rmarkdown::render("~/NCSU/ST558/Repos/ST558-Project1/README.Rmd",
                 html_preview = FALSE
                 )
               )
-
 ```
 
 ## Create vignette for reading and summarizing data from the API
 
 
-# Required packages needed to run the code to create vignette
+# Requirements
+packages needed to run the code to create vignette
 
 ```{r}
 library(httr)
@@ -91,7 +90,6 @@ confirmed <- function(country = "all"){
     }
   return(sub)
 }
-confirmed(country = "all")
 ```
 The deaths function is used to return total and new COVID-19 deaths for a country of interest. To return the total case count for all countries, "all" can be used. These total counts are updated daily.  
 
@@ -151,8 +149,6 @@ deaths <- function(country = "all"){
     }
   return(sub)
 }
-
-deaths(country = "all")
 ```
 
 The daily function is used to return all cases by case type for a country from the first recorded case. These total counts are updated daily. 
@@ -180,8 +176,6 @@ daily <- function(country) {
   
   return(sub)
 }
-
-daily("united-states")
 ```
 
 The live function is used to return all live confirmed cases (10 minute increments) for the country of interest. These live counts are updated every 10 minutes. 
@@ -208,8 +202,6 @@ live <- function(country) {
   
   return(sub)
 }
-
-live("brazil")
 ```
 
 The dateFilter function is used to return cumulative daily confirmed cases for a given range of dates for the country of interest. 
@@ -271,8 +263,6 @@ worldPercent <- function(country) {
                     "Global Case Count", "% of Global Case Count")
   return(df)
 }
-
-worldPercent("united-states")
 ```
 
 # Exploratory Data Analysis
@@ -449,6 +439,9 @@ g <- ggplot(combinedAll,
   ggtitle("Daily Case Count for Top 3 Countries") + 
   # Remove the legend 
   theme(legend.position="none")
+
+# Show plot
+  g
 ```
 
 Looking at the boxplots, we see that the U.S has the highest daily average followed by India and Brazil. We can see that India has many outliers which represents individual days where the confirmed case count was extremely high. Brazil didn't have as many outliers in comparison to the U.S and India. 
@@ -480,11 +473,14 @@ totalBar <- rbind(usBar,indiaBar,brazilBar)
 
 # Create positions and barplot of total deaths
 positions <- c("United States", "Brazil", "India")
-g <- ggplot(data = totalBar, aes(x = Country)) + scale_x_discrete(limits = positions)
+g2 <- ggplot(data = totalBar, aes(x = Country)) + scale_x_discrete(limits = positions)
 # Add barplot
-g + geom_bar(fill = c("red", "green", "blue")) +
+g2 + geom_bar(fill = c("red", "green", "blue")) +
   # Add labels and title
   labs(y = "Death", title = "Bar Plot of Deaths from Top 3 Countries") 
+
+#Show plot
+g2
 
 ```
 
@@ -492,13 +488,16 @@ I then created a histogram of daily confirmed cases with each region overlayed. 
 
 ```{r, histogram}
 # Create histogram of daily case count
-g <- ggplot(combinedAll, aes(x = Count, fill = Country))
-g + geom_histogram() +
+g3 <- ggplot(combinedAll, aes(x = Count, fill = Country))
+g3 + geom_histogram() +
   #Add labels to axes
   scale_x_continuous("Number of Confirmed Cases") + 
   scale_y_continuous("Daily Case Frequency") +
   # Add a title
   ggtitle("Frequency of Daily Confirmed Cases by Region") 
+
+#Show plot
+g3
 ```
 
 Using the daily endpoint, I created a scatterplot of cumulative total cases over time by region. We see different trends based on region, with some case loads increasing at faster rates over others. 
@@ -526,9 +525,9 @@ colnames(brazil) <- c("Day","Confirmed","Country")
 data <- rbind(us,india,brazil)
 
 # Create scatterplot of cumulative daily confirmed case numbers by region
-g <- ggplot(data, aes(Day,Confirmed, color = Country))
+g4 <- ggplot(data, aes(Day,Confirmed, color = Country))
 # Scatterplot layer
-g + geom_point() +
+g4 + geom_point() +
     # Add trend line
     geom_smooth(col = "Black") +
     # Add labels
@@ -539,6 +538,9 @@ g + geom_point() +
     facet_wrap(~Country) +
     # Remove the legend 
     theme(legend.position="none")
+
+#Show plot
+g4
 ```
 
 Using the daily endpoint, I created a scatterplot of total cases by day for each region. Instead of the viewing the cumulative trend, we are looking at daily confirmed cases over time. We see different trends based on region, with one noticeable spike in case load from India and two large spikes in the U.S.  
@@ -558,9 +560,9 @@ combinedAll <- cbind(combinedAll, Day)
 combinedAll
 
 # Create scatterplot for each country of daily cases
-g <- ggplot(combinedAll, aes(Day, Count, color = Country))
+g5 <- ggplot(combinedAll, aes(Day, Count, color = Country))
 # Add scatterplot layer
-g + geom_point() +
+g5 + geom_point() +
     # Add trend line
     geom_smooth(col = "Black") +
     # Add axis label
@@ -571,5 +573,8 @@ g + geom_point() +
     facet_wrap(~Country) +
     # Remove the legend 
     theme(legend.position="none")
+
+#Show plot
+g5
 ```
 
