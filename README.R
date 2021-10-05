@@ -6,6 +6,7 @@ rmarkdown::render(input = "~/NCSU/ST558/Repos/ST558-Project1/README.Rmd",
                   output_format = "github_document", 
                   output_file = "README.md",
                   output_options = list(
+                    toc = TRUE,
                     html_preview = FALSE
                   )
 )

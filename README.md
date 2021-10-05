@@ -3,6 +3,16 @@ README
 Alex Prevatte
 10/2/2021
 
+-   [Requirements](#requirements)
+-   [API Connection Functions](#api-connection-functions)
+    -   [`confirmed`](#confirmed)
+    -   [`deaths`](#deaths)
+    -   [`daily`](#daily)
+    -   [`live`](#live)
+    -   [`dateFilter`](#datefilter)
+    -   [`worldPercent`](#worldpercent)
+-   [Exploratory Data Analysis](#exploratory-data-analysis)
+
 This vignette was created for reading and summarizing data from the
 [COVID-19
 API](https://documenter.getpostman.com/view/10808728/SzS8rjbc#704f6cc8-780a-4819-8c66-5e03750cb406)
