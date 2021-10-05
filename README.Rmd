@@ -1,5 +1,5 @@
 ---
-title: "README"
+title: "ST558 Project 1: Interacting with APIs"
 author: "Alex Prevatte"
 date: "10/2/2021"
 ---
@@ -29,7 +29,7 @@ library(RCurl)
 
 # API Connection Functions
 
-## `confirmed`
+### `confirmed`
 
 The `confirmed` function is used to return total and new confirmed COVID-19 case counts for a country of interest. To return the total case count for all countries, "all" can be used. These total counts are updated daily.  
 
@@ -91,7 +91,7 @@ confirmed <- function(country = "all"){
 }
 ```
 
-## `deaths`
+### `deaths`
 
 The `deaths` function is used to return total and new COVID-19 deaths for a country of interest. To return the total case count for all countries, `"all"` can be used. These total counts are updated daily.  
 
@@ -153,7 +153,7 @@ deaths <- function(country = "all"){
 }
 ```
 
-## `daily`
+### `daily`
 
 The `daily` function is used to return all cases by case type for a country from the first recorded case. These total counts are updated daily. 
 
@@ -182,7 +182,7 @@ daily <- function(country) {
 }
 ```
 
-## `live`
+### `live`
 
 The `live` function is used to return all live confirmed cases (10 minute increments) for the country of interest. These live counts are updated every 10 minutes. 
 
@@ -210,7 +210,7 @@ live <- function(country) {
 }
 ```
 
-## `dateFilter`
+### `dateFilter`
 
 The `dateFilter` function is used to return cumulative daily confirmed cases for a given range of dates for the country of interest. 
 
@@ -242,7 +242,7 @@ dateFilter <- function(country, covidStart, covidEnd) {
 }
 ```
 
-## `worldPercent`
+### `worldPercent`
 
 The `worldPercent` function uses the world and summary endpoints to return total confirmed cases, total deaths, and percent of confirmed cases and deaths from global cases. Here we can directly see what percent of global cases and deaths are attributed to a given country. 
 

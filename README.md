@@ -1,4 +1,4 @@
-README
+ST558 Project 1: Interacting with APIs
 ================
 Alex Prevatte
 10/2/2021
@@ -33,7 +33,7 @@ the following packages:
 
 # API Connection Functions
 
-## `confirmed`
+### `confirmed`
 
 The `confirmed` function is used to return total and new confirmed
 COVID-19 case counts for a country of interest. To return the total case
@@ -98,7 +98,7 @@ confirmed <- function(country = "all"){
 }
 ```
 
-## `deaths`
+### `deaths`
 
 The `deaths` function is used to return total and new COVID-19 deaths
 for a country of interest. To return the total case count for all
@@ -162,7 +162,7 @@ deaths <- function(country = "all"){
 }
 ```
 
-## `daily`
+### `daily`
 
 The `daily` function is used to return all cases by case type for a
 country from the first recorded case. These total counts are updated
@@ -193,7 +193,7 @@ daily <- function(country) {
 }
 ```
 
-## `live`
+### `live`
 
 The `live` function is used to return all live confirmed cases (10
 minute increments) for the country of interest. These live counts are
@@ -223,7 +223,7 @@ live <- function(country) {
 }
 ```
 
-## `dateFilter`
+### `dateFilter`
 
 The `dateFilter` function is used to return cumulative daily confirmed
 cases for a given range of dates for the country of interest.
@@ -256,7 +256,7 @@ dateFilter <- function(country, covidStart, covidEnd) {
 }
 ```
 
-## `worldPercent`
+### `worldPercent`
 
 The `worldPercent` function uses the world and summary endpoints to
 return total confirmed cases, total deaths, and percent of confirmed
