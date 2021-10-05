@@ -23,8 +23,6 @@ rmarkdown::render("~/NCSU/ST558/Repos/ST558-Project1/README.Rmd",
 
 ## Create vignette for reading and summarizing data from the API
 
-NASA key: eR97TrIVKwTWcIIdWJKGyVFCSHjlZtuluykfI93U
-Example to use the key: https://api.nasa.gov/planetary/apod?api_key=eR97TrIVKwTWcIIdWJKGyVFCSHjlZtuluykfI93U
 
 # Required packages needed to run the code to create vignette
 
@@ -35,13 +33,12 @@ library(tidyverse)
 library(RCurl)
 ```
 
+The confirmed function is used to return total and new confirmed COVID-19 case counts for a country of interest. To return the total case count for all countries, "all" can be used. These total counts are updated daily.  
 
 ```{r, confirmed}
 confirmed <- function(country = "all"){
   ###
-  # This function returns total covid case count, new covid case count,
-  # and total death count for the country of interest.
-  #
+  # This function returns total and new COVID case count
   ###
   
   # Obtain data from summary endpoint
@@ -49,58 +46,59 @@ confirmed <- function(country = "all"){
     "https://api.covid19api.com/summary"
     )
   
+  # View countries
   output <- o$Countries
   
+  # If country input is not "all", filter rows accordingly
   if (country != "all"){
     
-  # Filter rows based on selected Country. Select TotalConfirmed,
-  # NewConfirmed, TotalDeaths
+  # Filter rows based on country selected. 
+  # Select Country,TotalConfirmed, and NewConfirmed variables
    if (country %in% output$Country){
     sub <- output %>%
        filter(Country == country) %>%
        select(Country,TotalConfirmed,NewConfirmed)
    }
   
-  # Filter rows based on selected Country. Select TotalConfirmed,
-  # NewConfirmed, TotalDeaths
+  # Filter rows based on selected Country Code. 
+  # Select Country,TotalConfirmed, and NewConfirmed variables
   else if (country %in% output$CountryCode){
     sub <- output %>%
       filter(CountryCode == country) %>%
       select(Country,TotalConfirmed,NewConfirmed)
   }
   
-  # Filter rows based on selected Country. Select TotalConfirmed,
-  # NewConfirmed, TotalDeaths
+  # Filter rows based on selected Slug 
+  # Select Country,TotalConfirmed, and NewConfirmed variables
   else if (country %in% output$Slug){
     sub <- output %>%
       filter(Slug == country) %>%
       select(Country,TotalConfirmed,NewConfirmed)
   }
   
-  # Filter rows based on selected Country. Select TotalConfirmed,
-  # NewConfirmed, TotalDeaths
+  # If Country, Country Code, or Slug is not found, return error message. 
   else {
     message <- paste("ERROR: Country was not found in Country,
                      CountryCode, or Slug columns. Check spelling.")
     stop(message)
   }
 }
-    # Return all confirmed cases from all countries
-    else { 
-      sub <- output %>%
-       select(Country,TotalConfirmed,NewConfirmed)
+  # Return Country, TotalConfirmed, and NewConfirmed variables 
+  # from all countries
+  else { 
+    sub <- output %>%
+      select(Country,TotalConfirmed,NewConfirmed)
     }
-return(sub)
+  return(sub)
 }
 confirmed(country = "all")
 ```
+The deaths function is used to return total and new COVID-19 deaths for a country of interest. To return the total case count for all countries, "all" can be used. These total counts are updated daily.  
 
 ```{r, deaths}
 deaths <- function(country = "all"){
   ###
-  # This function returns total covid case count, new covid case count,
-  # and total death count for the country of interest.
-  #
+  # This function returns total and new COVID deaths
   ###
   
   # Obtain data from summary endpoint
@@ -108,123 +106,74 @@ deaths <- function(country = "all"){
     "https://api.covid19api.com/summary"
     )
   
+  # View countries
   output <- o$Countries
   
+  # If country input is not "all", filter rows accordingly
   if (country != "all"){
     
-  # Filter rows based on selected Country. Select TotalConfirmed,
-  # NewConfirmed, TotalDeaths
-   if (country %in% output$Country){
+  # Filter rows based on country selected. 
+  # Select Country,TotalDeaths, and NewDeaths variables
+  if (country %in% output$Country){
     sub <- output %>%
        filter(Country == country) %>%
        select(Country,TotalDeaths,NewDeaths)
    }
   
-  # Filter rows based on selected Country. Select TotalConfirmed,
-  # NewConfirmed, TotalDeaths
+  # Filter rows based on Country Code selected. 
+  # Select Country,TotalDeaths, and NewDeaths variables
   else if (country %in% output$CountryCode){
     sub <- output %>%
       filter(CountryCode == country) %>%
       select(Country,TotalDeaths,NewDeaths)
   }
   
-  # Filter rows based on selected Country. Select TotalConfirmed,
-  # NewConfirmed, TotalDeaths
+  # Filter rows based on Slug selected. 
+  # Select Country,TotalDeaths, and NewDeaths variables
   else if (country %in% output$Slug){
     sub <- output %>%
       filter(Slug == country) %>%
       select(Country,TotalDeaths,NewDeaths)
   }
   
-  # Filter rows based on selected Country. Select TotalConfirmed,
-  # NewConfirmed, TotalDeaths
+  # If Country, Country Code, or Slug is not found, return error message. 
   else {
     message <- paste("ERROR: Country was not found in Country,
                      CountryCode, or Slug columns. Check spelling.")
     stop(message)
   }
   }
-  # Return all deaths from all countries
+  # Return Country, TotalDeaths, and NewDeaths variables 
+  # from all countries
   else { 
        sub <- output %>%
        select(Country,TotalDeaths,NewDeaths)
     }
-return(sub)
+  return(sub)
 }
 
 deaths(country = "all")
 ```
-Will likely not use because recovered data is zero for everything 
-```{r, recovered}
-recovered <- function(country = "all"){
-  ###
-  # This function returns total covid case count, new covid case count,
-  # and total death count for the country of interest.
-  #
-  ###
-  
-  # Obtain data from summary endpoint
-  o <- fromJSON(
-    "https://api.covid19api.com/summary"
-    )
-  
-  output <- o$Countries
-  
-  if (country != "all"){
-    
-  # Filter rows based on selected Country. Select TotalConfirmed,
-  # NewConfirmed, TotalDeaths
-   if (country %in% output$Country){
-    sub <- output %>%
-       filter(Country == country) %>%
-       select(Country,TotalRecovered,NewRecovered)
-   }
-  
-  # Filter rows based on selected Country. Select TotalConfirmed,
-  # NewConfirmed, TotalDeaths
-  else if (country %in% output$CountryCode){
-    sub <- output %>%
-      filter(CountryCode == country) %>%
-      select(Country,TotalRecovered,NewRecovered)
-  }
-  
-  # Filter rows based on selected Country. Select TotalConfirmed,
-  # NewConfirmed, TotalDeaths
-  else if (country %in% output$Slug){
-    sub <- output %>%
-      filter(Slug == country) %>%
-      select(Country,TotalRecovered,NewRecovered)
-  }
-  
-  # Filter rows based on selected Country. Select TotalConfirmed,
-  # NewConfirmed, TotalDeaths
-  else {
-    message <- paste("ERROR: Country was not found in Country,
-                     CountryCode, or Slug columns. Check spelling.")
-    stop(message)
-  }
-  }
-  else { 
-       sub <- output %>%
-       select(Country,TotalRecovered,NewRecovered)
-    }
-return(sub)
-}
 
-recovered(country = "all")
-```
-
-Returns all cases by case type for a country from the first recorded case. 
+The daily function is used to return all cases by case type for a country from the first recorded case. These total counts are updated daily. 
 
 ```{r, daily}
 daily <- function(country) {
+  ###
+  # This function returns total cases by case type for a specified country
+  ###
+  
+  # Construct URL for country flexibility
   baseURL <- "https://api.covid19api.com/dayone/country/"
   value <- country
+  # Return only blank provinces
   last <- "?province=+"
   URL <- paste0(baseURL, value, last)
   out <- RCurl::getURL(URL)
   o <- fromJSON(URL)
   
+  # Subset dataset to return Country, Province, Confirmed, Deaths,
+  # Recovered, Active, and Date variables
   sub <- o %>%
        select(Country, Province, Confirmed, 
               Deaths, Recovered, Active, Date)
@@ -232,24 +181,30 @@ daily <- function(country) {
   return(sub)
 }
 
-daily("india")
+daily("united-states")
 ```
 
-Returns all live cases (10 minute increments) for the country and province of interest
+The live function is used to return all live confirmed cases (10 minute increments) for the country of interest. These live counts are updated every 10 minutes. 
 
 ```{r, live}
 live <- function(country) {
+  ###
+  # This function returns live confirmed cases by country
+  ###
+  
+  # Construct URL for country flexibility
   baseURL <- "https://api.covid19api.com/live/country/"
   value <- country
+  # Return all provinces
   region <- "?province=+"
   last <- "/status/confirmed"
   URL <- paste0(baseURL, value, region, last)
   out <- RCurl::getURL(URL)
   o <- fromJSON(out)
   
+  # Subset dataset to return Country, Province, Confirmed, and Date variables
   sub <- o %>%
-       select(Country, Province, Confirmed, 
-              Date)
+       select(Country, Province, Confirmed, Date)
   
   return(sub)
 }
@@ -257,21 +212,61 @@ live <- function(country) {
 live("brazil")
 ```
 
+The dateFilter function is used to return cumulative daily confirmed cases for a given range of dates for the country of interest. 
 
-Total confirmed and total death percentages calculated from the summaries and world endpoints. Here we can directly see what percent of global cases and death are attributed to each country. 
+```{r, dateFilter}
+dateFilter <- function(country, covidStart, covidEnd) {
+  ###
+  # This function returns live confirmed cases by country
+  ###
+  
+  # Construct URL for country flexibility
+  baseURL <- "https://api.covid19api.com/country/"
+  value <- country
+  
+  # Add remaining URL pieces with time stamp
+  status <- "/status/confirmed?from="
+  start <- covidStart
+  from <- "T00:00:00Z&to="
+  end <- covidEnd
+  to <- "T00:00:00Z"
+  URL <- paste0(baseURL, value, status, start, from, end, to)
+  out <- RCurl::getURL(URL)
+  o <- fromJSON(out)
+  
+  # Subset dataset to return Country, Province, Confirmed, and Date variables
+  sub <- o %>%
+       select(Country, Province, Cases, Status, Date)
+  
+  return(sub)
+}
+
+dateFilter("south-africa", "2020-06-01", "2020-08-01")
+```
+
+The worldPercent function uses the world and summary endpoints to return total confirmed cases, total deaths, and percent of confirmed cases and deaths from global cases. Here we can directly see what percent of global cases and deaths are attributed to a given country. 
 
 ```{r, worldPercent}
 worldPercent <- function(country) {
+  ###
+  # This function returns country confirmed and death percentages 
+  # in relation to global case numbers 
+  ###
+  
+  # Construct URL from world endpoint
   URL <- "https://api.covid19api.com/world/total"
   out <- RCurl::getURL(URL)
   o <- fromJSON(URL)
   
-  death <- round((deaths(country)[1] / o[["TotalDeaths"]]) * 100, 2)
-  confirm <- round((confirmed(country)[1] / o[["TotalConfirmed"]]) * 100,2)
-  df <- data.frame(deaths(country)[1], o[["TotalDeaths"]], 
-                   death, confirmed(country)[1],
+  # Calculate confirmed case and death percentages
+  death <- round((deaths(country)[2] / o[["TotalDeaths"]]) * 100, 2)
+  confirm <- round((confirmed(country)[2] / o[["TotalConfirmed"]]) * 100,2)
+  
+  # Construct dataframe of relevant information
+  df <- data.frame(country, deaths(country)[2], o[["TotalDeaths"]], 
+                   death, confirmed(country)[2],
                    o[["TotalConfirmed"]], confirm)
-  colnames(df) <- c("Death Count", "Global Death Count", 
+  colnames(df) <- c("Country", "Death Count", "Global Death Count", 
                     "% of Global Death", "Case count", 
                     "Global Case Count", "% of Global Case Count")
   return(df)
@@ -280,12 +275,12 @@ worldPercent <- function(country) {
 worldPercent("united-states")
 ```
 
+# Exploratory Data Analysis
 
-# create contingency tables
-# create numerical summaries for some quantitative variables at each setting of categorical.
-# craete at least 5 plots - 1 bar, 1 histogram, 1 box, 1 scatter
+After creating functions to interact with the COVID-19 API, we are going to create contingency tables,
+quantitative summaries, and a variety of qualitative and quantitative visualizations. 
 
-Contingency Tables - Compare data for top 3 Countries based on confirmed Cases
+First, we are going to compare total confirmed cases and deaths from the three largest countries by confirmed case number (United States of America, India, Brazil). We are also going to examine new daily confirmed cases and deaths from these countries.
 
 ```{r, contingency}
 # Determine top 3 countries with highest total confirmed case count
@@ -327,24 +322,26 @@ combinedNewDF <- cbind(confirmedNewDF,deathNewDF)
 colnames(combinedNewDF) <- c("Country", "New Daily Confirmed Cases", "New Daily Deaths")
 knitr::kable(combinedNewDF)
 ```
+Based on the contingency tables, total and new confirmed case numbers from highest to lowest are from the United States, India, and Brazil respectively. However, Brazil has more total deaths in comparison to India. 
 
-Create numerical summaries for quant variables at each setting of categorical variable:
 
-The daily function contains confirmed cases and death values that are cumulative sums for each subsequent day. To create quantitative summaries of this data, I decided to create two new variables that display the daily confirmed case and death count without summing these variables over time. This way, we can determine summary statistics for daily confirmed and death values. 
 
-Notes: Numerical summaries of new confirmed and new death cases in United States 
+Next, I'd like to look at numerical summaries for daily confirmed cases and daily deaths from the United States. The COVID-19 API contains confirmed cases and deaths cumulatively by day, but I'd like to see how the daily counts and deaths vary by day. To create quantitative summaries of this data, I decided to create two new variables, newDailyConfirmed and newDailyDeaths, that display the daily confirmed case and death count without summing these variables over time. This way, we can determine summary statistics for daily confirmed and death values. 
+
 ```{r, numerical summaries}
-#Create two new variables for United States
+# Extract data from the daily function
 usDF <- daily("united-states")
 n <- nrow(usDF)
+# Create two new variables for the United States
 newDailyConfirmed <- vector(n, mode = "numeric")
 newDailyDeaths <- vector(n, mode = "numeric")
+# Run a loop to fill the new variables with daily information
 for (i in 1:n) {
   newDailyConfirmed[i] <- usDF$Confirmed[i+1] - usDF$Confirmed[i]
   newDailyDeaths[i] <- usDF$Deaths[i+1] - usDF$Deaths[i]
 }
 
-#Get summary statistics for new daily cases and deaths for the U.S
+# Get summary statistics for new daily confirmed cases in the U.S
 newDailyConfirmed <- data.frame(newDailyConfirmed)
 newDailyConfirmed <- newDailyConfirmed %>%
 summarize("Min." = min(newDailyConfirmed, na.rm = TRUE),
@@ -355,9 +352,10 @@ summarize("Min." = min(newDailyConfirmed, na.rm = TRUE),
           "Max" = max(newDailyConfirmed, na.rm = TRUE),
           "Std. Dev." = sd(newDailyConfirmed, na.rm = TRUE)
           )
-# assign category
+# Assign category
 newDailyConfirmed$Category <- "Daily Confirmed Cases"
 
+# Get summary statistics for new daily deaths in the U.S
 newDailyDeaths <- data.frame(newDailyDeaths)
 newDailyDeaths <- newDailyDeaths %>%
 summarize("Min." = min(newDailyDeaths, na.rm = TRUE),
@@ -377,14 +375,17 @@ combinedStats <- combinedStats %>% select(Category, Min., `1st Quartile`, Median
                                           Mean, `3rd Quartile`, Max, `Std. Dev.`)
   
 knitr::kable(combinedStats, 
-             caption="Summary Statistics for Daily Confirmed Cases and Deaths in the United States",
+             caption="Summary Statistics for Daily Confirmed Cases
+             and Deaths in the United States",
              digits=0)
 ```
 
-Boxplot of top three countries daily confirmed case count 
+The numeric summaries for daily confirmed cases and daily death show quite a bit of variability. Some days there were not many cases and deaths, other days had much higher values. This makes sense, as the U.S experienced several waves of increased cases and deaths before vaccination.  
+
+Now let's look at boxplots of the top three countries by case number to visualize daily confirmed case count.
 
 ```{r, boxplot}
-#Create daily confirmed variables for United States 
+# Create daily confirmed variables for United States 
 usDFCount <- daily("united-states")
 n <- nrow(usDFCount)
 usDailyConfirmed <- vector(n, mode = "numeric")
@@ -392,29 +393,26 @@ for (i in 1:n) {
   usDailyConfirmed[i] <- usDFCount$Confirmed[i+1] - usDFCount$Confirmed[i]
 }
 
-# assign category, column name, and convert to dataframe
+# Assign category, column name, and convert to dataframe
 usDailyConfirmed <- data.frame(usDailyConfirmed)
 usDailyConfirmed$Country <- "United States"
 colnames(usDailyConfirmed) <- c("Count", "Country")
 
 
-#Create daily confirmed variables for India 
+# Create daily confirmed variables for India 
 indiaDF <- daily("india")
 n <- nrow(indiaDF)
-n
 indiaDailyConfirmed <- vector(n, mode = "numeric")
 for (i in 1:n) {
   indiaDailyConfirmed[i] <- indiaDF$Confirmed[i+1] - indiaDF$Confirmed[i]
 }
 
-
-# assign category, column name, and convert to dataframe
+# Assign category, column name, and convert to dataframe
 indiaDailyConfirmed <- data.frame(indiaDailyConfirmed)
 indiaDailyConfirmed$Country <- "India"
 colnames(indiaDailyConfirmed) <- c("Count", "Country")
 
-
-#Create daily confirmed variables for Brazil 
+# Create daily confirmed variables for Brazil 
 brazilDF <- daily("brazil")
 n <- nrow(brazilDF)
 brazilDailyConfirmed <- vector(n, mode = "numeric")
@@ -422,45 +420,54 @@ for (i in 1:n) {
   brazilDailyConfirmed[i] <- brazilDF$Confirmed[i+1] - brazilDF$Confirmed[i]
 }
 
-# assign category and convert to dataframe
+# Assign category, column name, and convert to dataframe
 brazilDailyConfirmed <- data.frame(brazilDailyConfirmed)
 brazilDailyConfirmed$Country <- "Brazil"
 colnames(brazilDailyConfirmed) <- c("Count", "Country")
 
-
+# Combine data from the U.S, India, and Brazil
 combinedAll <- rbind(usDailyConfirmed,indiaDailyConfirmed,brazilDailyConfirmed)
 combinedAll <- combinedAll %>% filter(!is.na(Count))
 
+# Create factor from categorical variable. 
 country <- factor(combinedAll$Country, 
                   levels = c("United States", "India", "Brazil"),
                   ordered = TRUE)
-# Make a box plot of franchise win percentage by game type.
+
+# Make a box plot of daily confirmed cases by region.
 g <- ggplot(combinedAll, 
                aes(x = country,
                    y = Count,
                    color = Country
         ))
-  # Add the box plot layer.
+  # Add the box plot layer
   g + geom_boxplot() +
-  # Add labels to the axes.
-  scale_x_discrete("Daily Case Count") + 
-  # Add a title.
+  # Add labels to the axes
+  scale_x_discrete("Country") +
+  scale_y_continuous("Daily Case Count") + 
+  # Add a title
   ggtitle("Daily Case Count for Top 3 Countries") + 
   # Remove the legend 
   theme(legend.position="none")
 ```
 
-Most deaths from 3 countries
+Looking at the boxplots, we see that the U.S has the highest daily average followed by India and Brazil. We can see that India has many outliers which represents individual days where the confirmed case count was extremely high. Brazil didn't have as many outliers in comparison to the U.S and India. 
+
+To visualize deaths from the United States, Brazil, and India, I created a simple barplot.
+Here we can see that deaths from Brazil are much higher than India, though India had a higher total case count.
 
 ```{r, barplot}
+# Determine top 3 countries by total deaths
 totalDeaths <- deaths("all")[c(1,2)]
 totalDeathsOrdered <- totalDeaths %>% arrange(desc(TotalDeaths))
 order <- totalDeathsOrdered[1:3,]
 
+# Parse out total deaths from each country
 usDeaths <- deaths("united-states")[c(1,2)]
 indiaDeaths <- deaths("india")[c(1,2)]
 brazilDeaths <- deaths("brazil")[c(1,2)]
 
+# Convert to dataframe and assign categorical variable for each country
 usBar <- data.frame(replicate(n = usDeaths[1,2], "United States"))
 colnames(usBar) <- "Country"
 indiaBar <- data.frame(replicate(n = indiaDeaths[1,2], "India"))
@@ -468,62 +475,76 @@ colnames(indiaBar) <- "Country"
 brazilBar <- data.frame(replicate(n = brazilDeaths[1,2], "Brazil"))
 colnames(brazilBar) <- "Country"
 
+# Combine all data
 totalBar <- rbind(usBar,indiaBar,brazilBar)
 
+# Create positions and barplot of total deaths
 positions <- c("United States", "Brazil", "India")
 g <- ggplot(data = totalBar, aes(x = Country)) + scale_x_discrete(limits = positions)
+# Add barplot
 g + geom_bar(fill = c("red", "green", "blue")) +
+  # Add labels and title
   labs(y = "Death", title = "Bar Plot of Deaths from Top 3 Countries") 
 
 ```
-Histogram of Daily Case Count
+
+I then created a histogram of daily confirmed cases with each region overlayed. From this histogram, we can see that there was a higher frequency of lower case numbers from Brazil in comparison to the U.S and India. The U.S and India had more days of higher confirmed cases. 
 
 ```{r, histogram}
+# Create histogram of daily case count
 g <- ggplot(combinedAll, aes(x = Count, fill = Country))
 g + geom_histogram() +
   #Add labels to axes
   scale_x_continuous("Number of Confirmed Cases") + 
   scale_y_continuous("Daily Case Frequency") +
   # Add a title
-  ggtitle("Frequency of Daily Confirmed Cases by Region") +
-  # Remove the legend 
-  theme(legend.position="none")
+  ggtitle("Frequency of Daily Confirmed Cases by Region") 
 ```
 
-Scatterplot of total cases over time by region
+Using the daily endpoint, I created a scatterplot of cumulative total cases over time by region. We see different trends based on region, with some case loads increasing at faster rates over others. 
 
 ```{r, scatterplot}
+# Create United States dataframe of cumulative cases
 day <- rep(1:nrow(usDF))
 category <- data.frame(replicate(nrow(usDF), "United States"))
 us <- cbind(day, Confirmed = usDF$Confirmed, Cat = category)
 colnames(us) <- c("Day","Confirmed","Country")
 
+# Create India dataframe of cumulative cases
 day <- rep(1:nrow(indiaDF))
 category <- data.frame(replicate(nrow(indiaDF), "India"))
 india <- cbind(day, Confirmed = indiaDF$Confirmed, Cat = category)
 colnames(india) <- c("Day","Confirmed","Country")
 
+# Create Brazil dataframe of cumulative cases
 day <- rep(1:nrow(brazilDF))
 category <- data.frame(replicate(nrow(brazilDF), "Brazil"))
 brazil <- cbind(day, Confirmed = brazilDF$Confirmed, Cat = category)
 colnames(brazil) <- c("Day","Confirmed","Country")
 
+# Combine all data 
 data <- rbind(us,india,brazil)
 
+# Create scatterplot of cumulative daily confirmed case numbers by region
 g <- ggplot(data, aes(Day,Confirmed, color = Country))
-  g + geom_point() +
+# Scatterplot layer
+g + geom_point() +
+    # Add trend line
     geom_smooth(col = "Black") +
+    # Add labels
     scale_y_continuous("Total Confirmed Case Count") + 
+    # Add title
     ggtitle("Scatterplot of Cumulative Confirmed Cases by Day") +
-  facet_wrap(~Country) +
+    # Graph by country
+    facet_wrap(~Country) +
     # Remove the legend 
-  theme(legend.position="none")
+    theme(legend.position="none")
 ```
 
-Scatterplot of daily case count  
+Using the daily endpoint, I created a scatterplot of total cases by day for each region. Instead of the viewing the cumulative trend, we are looking at daily confirmed cases over time. We see different trends based on region, with one noticeable spike in case load from India and two large spikes in the U.S.  
 
 ```{r, scatterplot2}
-# Ending at 1 less than number of rows to account for the NA removed in the combinedAll dataset. 
+# Ending at 1 less than the number of rows to account for the NA removed in the combinedAll dataset. 
 usDay <- data.frame(rep(1:(nrow(usDailyConfirmed)-1)))
 colnames(usDay) <- "Day"
 indiaDay <- data.frame(rep(1:(nrow(indiaDailyConfirmed)-1)))
@@ -536,13 +557,19 @@ Day <- rbind(usDay,indiaDay,brazilDay)
 combinedAll <- cbind(combinedAll, Day)
 combinedAll
 
+# Create scatterplot for each country of daily cases
 g <- ggplot(combinedAll, aes(Day, Count, color = Country))
-  g + geom_point() +
+# Add scatterplot layer
+g + geom_point() +
+    # Add trend line
     geom_smooth(col = "Black") +
+    # Add axis label
     scale_y_continuous("Daily Confirmed Case Count") + 
+    # Add title
     ggtitle("Scatterplot of Daily Confirmed Cases Over Time") +
-  facet_wrap(~Country) +
+    # Graph by country
+    facet_wrap(~Country) +
     # Remove the legend 
-  theme(legend.position="none")
+    theme(legend.position="none")
 ```
 
