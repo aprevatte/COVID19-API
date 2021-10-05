@@ -35,7 +35,6 @@ library(tidyverse)
 library(RCurl)
 ```
 
-Note: Maybe add death/total case ratio
 
 ```{r, confirmed}
 confirmed <- function(country = "all"){
@@ -431,6 +430,7 @@ colnames(brazilDailyConfirmed) <- c("Count", "Country")
 
 combinedAll <- rbind(usDailyConfirmed,indiaDailyConfirmed,brazilDailyConfirmed)
 combinedAll <- combinedAll %>% filter(!is.na(Count))
+
 country <- factor(combinedAll$Country, 
                   levels = c("United States", "India", "Brazil"),
                   ordered = TRUE)
@@ -456,7 +456,6 @@ Most deaths from 3 countries
 totalDeaths <- deaths("all")[c(1,2)]
 totalDeathsOrdered <- totalDeaths %>% arrange(desc(TotalDeaths))
 order <- totalDeathsOrdered[1:3,]
-order
 
 usDeaths <- deaths("united-states")[c(1,2)]
 indiaDeaths <- deaths("india")[c(1,2)]
@@ -476,7 +475,6 @@ g <- ggplot(data = totalBar, aes(x = Country)) + scale_x_discrete(limits = posit
 g + geom_bar(fill = c("red", "green", "blue")) +
   labs(y = "Death", title = "Bar Plot of Deaths from Top 3 Countries") 
 
-
 ```
 Histogram of Daily Case Count
 
@@ -487,12 +485,64 @@ g + geom_histogram() +
   scale_x_continuous("Number of Confirmed Cases") + 
   scale_y_continuous("Daily Case Frequency") +
   # Add a title
-  ggtitle("Frequency of Daily Confirmed Cases by Region")
+  ggtitle("Frequency of Daily Confirmed Cases by Region") +
+  # Remove the legend 
+  theme(legend.position="none")
 ```
 
 Scatterplot of total cases over time by region
 
-```{r, scatter}
+```{r, scatterplot}
+day <- rep(1:nrow(usDF))
+category <- data.frame(replicate(nrow(usDF), "United States"))
+us <- cbind(day, Confirmed = usDF$Confirmed, Cat = category)
+colnames(us) <- c("Day","Confirmed","Country")
 
+day <- rep(1:nrow(indiaDF))
+category <- data.frame(replicate(nrow(indiaDF), "India"))
+india <- cbind(day, Confirmed = indiaDF$Confirmed, Cat = category)
+colnames(india) <- c("Day","Confirmed","Country")
+
+day <- rep(1:nrow(brazilDF))
+category <- data.frame(replicate(nrow(brazilDF), "Brazil"))
+brazil <- cbind(day, Confirmed = brazilDF$Confirmed, Cat = category)
+colnames(brazil) <- c("Day","Confirmed","Country")
+
+data <- rbind(us,india,brazil)
+
+g <- ggplot(data, aes(Day,Confirmed, color = Country))
+  g + geom_point() +
+    geom_smooth(col = "Black") +
+    scale_y_continuous("Total Confirmed Case Count") + 
+    ggtitle("Scatterplot of Cumulative Confirmed Cases by Day") +
+  facet_wrap(~Country) +
+    # Remove the legend 
+  theme(legend.position="none")
+```
+
+Scatterplot of daily case count  
+
+```{r, scatterplot2}
+# Ending at 1 less than number of rows to account for the NA removed in the combinedAll dataset. 
+usDay <- data.frame(rep(1:(nrow(usDailyConfirmed)-1)))
+colnames(usDay) <- "Day"
+indiaDay <- data.frame(rep(1:(nrow(indiaDailyConfirmed)-1)))
+colnames(indiaDay) <- "Day"
+brazilDay <- data.frame(rep(1:(nrow(brazilDailyConfirmed)-1)))
+colnames(brazilDay) <- "Day"
+
+#combine all days
+Day <- rbind(usDay,indiaDay,brazilDay)
+combinedAll <- cbind(combinedAll, Day)
+combinedAll
+
+g <- ggplot(combinedAll, aes(Day, Count, color = Country))
+  g + geom_point() +
+    geom_smooth(col = "Black") +
+    scale_y_continuous("Daily Confirmed Case Count") + 
+    ggtitle("Scatterplot of Daily Confirmed Cases Over Time") +
+  facet_wrap(~Country) +
+    # Remove the legend 
+  theme(legend.position="none")
 ```
 
