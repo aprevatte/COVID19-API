@@ -479,7 +479,7 @@ g3 + geom_histogram() +
 
 Using the daily endpoint, I created a scatterplot of cumulative total cases over time by region. We see different trends based on region, with some case loads increasing at faster rates over others. 
 
-```{r, scatterplot}
+```{r, scatterplot, message=FALSE}
 # Create United States dataframe of cumulative cases
 day <- rep(1:nrow(usDF))
 category <- data.frame(replicate(nrow(usDF), "United States"))
@@ -519,7 +519,7 @@ g4 + geom_point() +
 
 Using the daily endpoint, I created a scatterplot of total cases by day for each region. Instead of the viewing the cumulative trend, we are looking at daily confirmed cases over time. We see different trends based on region, with one noticeable spike in case load from India and two large spikes in the U.S.  
 
-```{r, scatterplot2}
+```{r, scatterplot2, message = FALSE}
 # Ending at 1 less than the number of rows to account for the NA removed in the combinedAll dataset. 
 usDay <- data.frame(rep(1:(nrow(usDailyConfirmed)-1)))
 colnames(usDay) <- "Day"
@@ -531,7 +531,6 @@ colnames(brazilDay) <- "Day"
 #combine all days
 Day <- rbind(usDay,indiaDay,brazilDay)
 combinedAll <- cbind(combinedAll, Day)
-combinedAll
 
 # Create scatterplot for each country of daily cases
 g5 <- ggplot(combinedAll, aes(Day, Count, color = Country))
