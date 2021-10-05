@@ -8,17 +8,6 @@ date: "10/2/2021"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Code to Create this Document
-```{r,echo=TRUE,eval=FALSE}
-rmarkdown::render("~/NCSU/ST558/Repos/ST558-Project1/README.Rmd", 
-              output_format = "github_document", 
-              output_dir = "~/NCSU/ST558/Repos/ST558-Project1",
-              output_options = list(
-                html_preview = FALSE
-                )
-              )
-```
-
 ## Create vignette for reading and summarizing data from the API
 
 
@@ -232,8 +221,6 @@ dateFilter <- function(country, covidStart, covidEnd) {
   
   return(sub)
 }
-
-dateFilter("south-africa", "2020-06-01", "2020-08-01")
 ```
 
 The worldPercent function uses the world and summary endpoints to return total confirmed cases, total deaths, and percent of confirmed cases and deaths from global cases. Here we can directly see what percent of global cases and deaths are attributed to a given country. 
@@ -439,9 +426,6 @@ g <- ggplot(combinedAll,
   ggtitle("Daily Case Count for Top 3 Countries") + 
   # Remove the legend 
   theme(legend.position="none")
-
-# Show plot
-  g
 ```
 
 Looking at the boxplots, we see that the U.S has the highest daily average followed by India and Brazil. We can see that India has many outliers which represents individual days where the confirmed case count was extremely high. Brazil didn't have as many outliers in comparison to the U.S and India. 
@@ -478,10 +462,6 @@ g2 <- ggplot(data = totalBar, aes(x = Country)) + scale_x_discrete(limits = posi
 g2 + geom_bar(fill = c("red", "green", "blue")) +
   # Add labels and title
   labs(y = "Death", title = "Bar Plot of Deaths from Top 3 Countries") 
-
-#Show plot
-g2
-
 ```
 
 I then created a histogram of daily confirmed cases with each region overlayed. From this histogram, we can see that there was a higher frequency of lower case numbers from Brazil in comparison to the U.S and India. The U.S and India had more days of higher confirmed cases. 
@@ -495,9 +475,6 @@ g3 + geom_histogram() +
   scale_y_continuous("Daily Case Frequency") +
   # Add a title
   ggtitle("Frequency of Daily Confirmed Cases by Region") 
-
-#Show plot
-g3
 ```
 
 Using the daily endpoint, I created a scatterplot of cumulative total cases over time by region. We see different trends based on region, with some case loads increasing at faster rates over others. 
@@ -538,9 +515,6 @@ g4 + geom_point() +
     facet_wrap(~Country) +
     # Remove the legend 
     theme(legend.position="none")
-
-#Show plot
-g4
 ```
 
 Using the daily endpoint, I created a scatterplot of total cases by day for each region. Instead of the viewing the cumulative trend, we are looking at daily confirmed cases over time. We see different trends based on region, with one noticeable spike in case load from India and two large spikes in the U.S.  
@@ -573,8 +547,5 @@ g5 + geom_point() +
     facet_wrap(~Country) +
     # Remove the legend 
     theme(legend.position="none")
-
-#Show plot
-g5
 ```
 

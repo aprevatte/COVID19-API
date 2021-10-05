@@ -3,18 +3,6 @@ README
 Alex Prevatte
 10/2/2021
 
-# Code to Create this Document
-
-``` r
-rmarkdown::render("~/NCSU/ST558/Repos/ST558-Project1/README.Rmd", 
-              output_format = "github_document", 
-              output_dir = "~/NCSU/ST558/Repos/ST558-Project1",
-              output_options = list(
-                html_preview = FALSE
-                )
-              )
-```
-
 ## Create vignette for reading and summarizing data from the API
 
 # Requirements
@@ -239,73 +227,7 @@ dateFilter <- function(country, covidStart, covidEnd) {
   
   return(sub)
 }
-
-dateFilter("south-africa", "2020-06-01", "2020-08-01")
 ```
-
-    ##         Country Province  Cases    Status                 Date
-    ## 1  South Africa           34357 confirmed 2020-06-01T00:00:00Z
-    ## 2  South Africa           35812 confirmed 2020-06-02T00:00:00Z
-    ## 3  South Africa           37525 confirmed 2020-06-03T00:00:00Z
-    ## 4  South Africa           40792 confirmed 2020-06-04T00:00:00Z
-    ## 5  South Africa           43434 confirmed 2020-06-05T00:00:00Z
-    ## 6  South Africa           45973 confirmed 2020-06-06T00:00:00Z
-    ## 7  South Africa           48285 confirmed 2020-06-07T00:00:00Z
-    ## 8  South Africa           50879 confirmed 2020-06-08T00:00:00Z
-    ## 9  South Africa           52991 confirmed 2020-06-09T00:00:00Z
-    ## 10 South Africa           55421 confirmed 2020-06-10T00:00:00Z
-    ## 11 South Africa           58568 confirmed 2020-06-11T00:00:00Z
-    ## 12 South Africa           61927 confirmed 2020-06-12T00:00:00Z
-    ## 13 South Africa           65736 confirmed 2020-06-13T00:00:00Z
-    ## 14 South Africa           70038 confirmed 2020-06-14T00:00:00Z
-    ## 15 South Africa           73533 confirmed 2020-06-15T00:00:00Z
-    ## 16 South Africa           76334 confirmed 2020-06-16T00:00:00Z
-    ## 17 South Africa           80412 confirmed 2020-06-17T00:00:00Z
-    ## 18 South Africa           83890 confirmed 2020-06-18T00:00:00Z
-    ## 19 South Africa           87715 confirmed 2020-06-19T00:00:00Z
-    ## 20 South Africa           92681 confirmed 2020-06-20T00:00:00Z
-    ## 21 South Africa           97302 confirmed 2020-06-21T00:00:00Z
-    ## 22 South Africa          101590 confirmed 2020-06-22T00:00:00Z
-    ## 23 South Africa          106108 confirmed 2020-06-23T00:00:00Z
-    ## 24 South Africa          111796 confirmed 2020-06-24T00:00:00Z
-    ## 25 South Africa          118375 confirmed 2020-06-25T00:00:00Z
-    ## 26 South Africa          124590 confirmed 2020-06-26T00:00:00Z
-    ## 27 South Africa          131800 confirmed 2020-06-27T00:00:00Z
-    ## 28 South Africa          138134 confirmed 2020-06-28T00:00:00Z
-    ## 29 South Africa          144264 confirmed 2020-06-29T00:00:00Z
-    ## 30 South Africa          151209 confirmed 2020-06-30T00:00:00Z
-    ## 31 South Africa          159333 confirmed 2020-07-01T00:00:00Z
-    ## 32 South Africa          168061 confirmed 2020-07-02T00:00:00Z
-    ## 33 South Africa          177124 confirmed 2020-07-03T00:00:00Z
-    ## 34 South Africa          187977 confirmed 2020-07-04T00:00:00Z
-    ## 35 South Africa          196750 confirmed 2020-07-05T00:00:00Z
-    ## 36 South Africa          205721 confirmed 2020-07-06T00:00:00Z
-    ## 37 South Africa          215855 confirmed 2020-07-07T00:00:00Z
-    ## 38 South Africa          224665 confirmed 2020-07-08T00:00:00Z
-    ## 39 South Africa          238339 confirmed 2020-07-09T00:00:00Z
-    ## 40 South Africa          250687 confirmed 2020-07-10T00:00:00Z
-    ## 41 South Africa          264184 confirmed 2020-07-11T00:00:00Z
-    ## 42 South Africa          276242 confirmed 2020-07-12T00:00:00Z
-    ## 43 South Africa          287796 confirmed 2020-07-13T00:00:00Z
-    ## 44 South Africa          298292 confirmed 2020-07-14T00:00:00Z
-    ## 45 South Africa          311049 confirmed 2020-07-15T00:00:00Z
-    ## 46 South Africa          324221 confirmed 2020-07-16T00:00:00Z
-    ## 47 South Africa          337594 confirmed 2020-07-17T00:00:00Z
-    ## 48 South Africa          350879 confirmed 2020-07-18T00:00:00Z
-    ## 49 South Africa          364328 confirmed 2020-07-19T00:00:00Z
-    ## 50 South Africa          373628 confirmed 2020-07-20T00:00:00Z
-    ## 51 South Africa          381798 confirmed 2020-07-21T00:00:00Z
-    ## 52 South Africa          394948 confirmed 2020-07-22T00:00:00Z
-    ## 53 South Africa          408052 confirmed 2020-07-23T00:00:00Z
-    ## 54 South Africa          421996 confirmed 2020-07-24T00:00:00Z
-    ## 55 South Africa          434200 confirmed 2020-07-25T00:00:00Z
-    ## 56 South Africa          445433 confirmed 2020-07-26T00:00:00Z
-    ## 57 South Africa          452529 confirmed 2020-07-27T00:00:00Z
-    ## 58 South Africa          459761 confirmed 2020-07-28T00:00:00Z
-    ## 59 South Africa          471123 confirmed 2020-07-29T00:00:00Z
-    ## 60 South Africa          482169 confirmed 2020-07-30T00:00:00Z
-    ## 61 South Africa          493183 confirmed 2020-07-31T00:00:00Z
-    ## 62 South Africa          503290 confirmed 2020-08-01T00:00:00Z
 
 The worldPercent function uses the world and summary endpoints to return
 total confirmed cases, total deaths, and percent of confirmed cases and
@@ -558,13 +480,6 @@ g <- ggplot(combinedAll,
 
 ![](README_files/figure-gfm/boxplot-1.png)<!-- -->
 
-``` r
-# Show plot
-  g
-```
-
-![](README_files/figure-gfm/boxplot-2.png)<!-- -->
-
 Looking at the boxplots, we see that the U.S has the highest daily
 average followed by India and Brazil. We can see that India has many
 outliers which represents individual days where the confirmed case count
@@ -608,13 +523,6 @@ g2 + geom_bar(fill = c("red", "green", "blue")) +
 
 ![](README_files/figure-gfm/barplot-1.png)<!-- -->
 
-``` r
-#Show plot
-g2
-```
-
-![](README_files/figure-gfm/barplot-2.png)<!-- -->
-
 I then created a histogram of daily confirmed cases with each region
 overlayed. From this histogram, we can see that there was a higher
 frequency of lower case numbers from Brazil in comparison to the U.S and
@@ -634,13 +542,6 @@ g3 + geom_histogram() +
     ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 
 ![](README_files/figure-gfm/histogram-1.png)<!-- -->
-
-``` r
-#Show plot
-g3
-```
-
-![](README_files/figure-gfm/histogram-2.png)<!-- -->
 
 Using the daily endpoint, I created a scatterplot of cumulative total
 cases over time by region. We see different trends based on region, with
@@ -687,13 +588,6 @@ g4 + geom_point() +
     ## `geom_smooth()` using method = 'loess' and formula 'y ~ x'
 
 ![](README_files/figure-gfm/scatterplot-1.png)<!-- -->
-
-``` r
-#Show plot
-g4
-```
-
-![](README_files/figure-gfm/scatterplot-2.png)<!-- -->
 
 Using the daily endpoint, I created a scatterplot of total cases by day
 for each region. Instead of the viewing the cumulative trend, we are
@@ -1072,10 +966,3 @@ g5 + geom_point() +
     ## `geom_smooth()` using method = 'loess' and formula 'y ~ x'
 
 ![](README_files/figure-gfm/scatterplot2-1.png)<!-- -->
-
-``` r
-#Show plot
-g5
-```
-
-![](README_files/figure-gfm/scatterplot2-2.png)<!-- -->
