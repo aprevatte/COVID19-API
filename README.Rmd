@@ -382,7 +382,7 @@ The numeric summaries for daily confirmed cases and daily death show quite a bit
 
 Now let's look at boxplots of the top three countries by case number to visualize daily confirmed case count.
 
-```{r, boxplot}
+```{r, boxplot, message = FALSE}
 # Create daily confirmed variables for United States 
 usDFCount <- daily("united-states")
 n <- nrow(usDFCount)
@@ -487,7 +487,7 @@ g2 + geom_bar(fill = c("red", "green", "blue")) +
 
 I then created a histogram of daily confirmed cases with each region overlayed. From this histogram, we can see that there was a higher frequency of lower case numbers from Brazil in comparison to the U.S and India. The U.S and India had more days of higher confirmed cases. 
 
-```{r, histogram}
+```{r, histogram, message = FALSE}
 # Create histogram of daily case count
 g3 <- ggplot(combinedAll, aes(x = Count, fill = Country))
 g3 + geom_histogram() +
